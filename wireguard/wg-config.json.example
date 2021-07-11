@@ -1,0 +1,10 @@
+{
+    "privateKey": "AMHVEZKGUpfPEeEailAaSnfVKgangF7T1rOkfM6DdnL=",
+    "ownIPv4": "172.22.167.81/32",
+    "ownIPv6": "fd75:eca7:b62a:10::1/64",
+    "ownIPv6LinkLocal": "fe80::42:3343:10:1/64",
+    "peerConfigPath": "/home/dn42/peers",
+    "excludedInterfaces": [
+        "eth0"
+    ]
+}

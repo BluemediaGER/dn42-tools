@@ -1,0 +1,8 @@
+{
+    "publicKey": "nGydnwbT5CbUxPKMkafiEkKV7T9JoParKvl9k2ikib0=",
+    "localPort": 12345,
+    "endpoint": "router1.example.com:12345",
+    "peerIPv4": "172.22.167.81",
+    "peerIPv6": "fe80::42:3343:10:1",
+    "customLinkLocal": ""
+}
