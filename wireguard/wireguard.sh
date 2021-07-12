@@ -63,7 +63,7 @@ create() {
         fi
         eval $add_addr
     fi
-  
+
     # Set own ip6 address
     if [ -n "${OWN_IP6+x}" ]; then
         ip addr add "$OWN_IP6" dev "wg-$1"
@@ -97,6 +97,7 @@ create() {
 remove() {
     if ip link | grep -q "wg-$1"; then
         ip link del "wg-$1"
+        echo "Interface wg-$1 removed."
     else
         echo "ERROR: Interface \"wg-$1\" could't be removed, because it doesn't exist."
         exit 1
@@ -104,11 +105,20 @@ remove() {
 }
 
 # Call create() for every peer in the configured folder
-autostart() {
+createall() {
     echo "Creating interfaces for peers in path \"$PEER_CONFIG_FOLDER\"."
     for peer in $(ls $PEER_CONFIG_FOLDER | egrep -i '.*\.wg\.json' ); do
         peer=$(echo "$peer" | sed 's/.wg.json//g')
         create $peer
+    done
+}
+
+# Call remove() for every interface that starts with wg-*
+removeall() {
+    echo "Removing all active interfaces..."
+    for peer in $(ip link | egrep -o "wg-[^:]*"); do
+        peer=$(echo "$peer" | sed 's/wg-//')
+        remove $peer
     done
 }
 
@@ -165,8 +175,11 @@ case $ACTION in
             create $2
         fi
     ;;
-    autostart)
-        autostart
+    allup)
+        createall
+    ;;
+    alldown)
+        removeall
     ;;
     config)
         config
@@ -185,9 +198,10 @@ case $ACTION in
         echo "    up <peername>        Create new wireguard interface for a given peer."
         echo "    down <peername>      Remove wireguard interface for a given peer."
         echo "    restart <peername>   Recreate the wireguard interface for a given peer."
+        echo "    allup                Create interfaces for all peers in configured folder."
+        echo "    alldown              Remove all active wireguard interfaces."
         echo "    config               Create an empty config file in the script path."
         echo "    template <path>      Create an empty peer config template."
-        echo "    autostart            Create interfaces for all peers in configured folder."
     ;;
     *)
         echo "Invalid action \"$ACTION\"."' Use "./wireguard.sh help" to get help.'
