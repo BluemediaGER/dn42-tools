@@ -78,11 +78,6 @@ create() {
         fi
     fi
 
-    #Set own ip6
-    if [ -n "$OWN_IP6" ]; then
-        ip route add "$OWN_IP6" dev "wg-$1"
-    fi
-
     # Deny forwarding for excluded interfaces
     for interface in "${EXCLUDED_INTERFACES[@]}"
     do
